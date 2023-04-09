@@ -25,6 +25,7 @@
 // 4. Update visual mesh with lightmap texture names
 
 using Elegy.MapCompiler.Assets;
+using Elegy.MapCompiler.ConsoleArguments;
 using Elegy.MapCompiler.Data.Processing;
 using Elegy.MapCompiler.Processors;
 
@@ -36,7 +37,7 @@ namespace Elegy.MapCompiler
 
 		public static void Main( string[] args )
 		{
-			Console.WriteLine( $"### Elegy.MapCompiler - built 2023/03/31 ###" );
+			Console.WriteLine( $"### Elegy.MapCompiler - built 2023/04/09 ###" );
 			Console.WriteLine( "I eat TrenchBroom and J.A.C.K. maps and produce compiled Elegy levels." );
 			Console.WriteLine( "Let's keep the fire... burning." );
 			Console.WriteLine();
@@ -52,9 +53,21 @@ namespace Elegy.MapCompiler
 				DebugFreeze( mParameters.DebugFreeze );
 			}
 
+			if ( mParameters.OutputPath == string.Empty )
+			{
+				mParameters.OutputPath = Path.GetFileNameWithoutExtension( mParameters.MapFile );
+			}
+
 			if ( mParameters.MapFile == string.Empty )
 			{
 				Console.WriteLine( "No map file was provided." );
+				return;
+			}
+
+			if ( mParameters.GameDirectory == string.Empty )
+			{
+				Console.WriteLine( "Hey uh, you gotta give me the game directory too." );
+				Console.WriteLine( "E.g. -gamedir \"C:/Games/MyGame/base\"" );
 				return;
 			}
 
@@ -139,12 +152,15 @@ namespace Elegy.MapCompiler
 
 				if ( System.Diagnostics.Debugger.IsAttached )
 				{
+					Console.WriteLine();
 					Console.WriteLine( "Alrighty, you've attached it! Let's go now." );
 					Console.WriteLine();
 					Thread.Sleep( 500 );
 					return;
 				}
 			}
+			
+			Console.WriteLine();
 		}
 
 		private static bool ProcessArgs( string[] args )
@@ -161,38 +177,7 @@ namespace Elegy.MapCompiler
 				return false;
 			}
 
-			for ( int i = 0; i < args.Length; i++ )
-			{
-				string argumentName = args[i];
-				string argumentValue = string.Empty;
-				if ( i < args.Length - 1 )
-				{
-					argumentValue = args[i + 1];
-					i++;
-				}
-
-				switch ( argumentName )
-				{
-					case "-map": mParameters.MapFile = argumentValue; break;
-					case "-out": mParameters.OutputPath = argumentValue; break;
-					case "-gamedir": mParameters.GameDirectory = argumentValue; break;
-					case "-debugfreeze": mParameters.DebugFreeze = Parse.Float( argumentValue ); break;
-					default: Console.WriteLine( $" * unknown argument '{argumentName}'" ); break;
-				}
-			}
-
-			if ( mParameters.OutputPath == string.Empty )
-			{
-				mParameters.OutputPath = Path.GetFileNameWithoutExtension( mParameters.MapFile );
-			}
-
-			if ( mParameters.GameDirectory == string.Empty )
-			{
-				Console.WriteLine( "Hey uh, you gotta give me the game directory too." );
-				Console.WriteLine( "E.g. '-gamedir C:/Games/MyGame/base'" );
-				return false;
-			}
-
+			ParameterManager.ProcessArguments( args, out mParameters );
 			return true;
 		}
 
