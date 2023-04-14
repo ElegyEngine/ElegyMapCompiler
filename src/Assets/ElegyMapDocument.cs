@@ -42,7 +42,8 @@ namespace Elegy.MapCompiler.Assets
 			using var file = File.CreateText( path );
 
 			// TODO: Utility to write & parse in this format
-			// NOT JSON
+			// Preferably JSON5 so it's human-friendly and all
+			// Refer to: https://github.com/ElegyEngine/ElegyCommon/issues/1
 
 			file.WriteLine( "ElegyLevelFile" );
 			file.WriteLine( "{" );
