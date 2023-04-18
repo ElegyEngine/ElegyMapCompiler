@@ -126,28 +126,13 @@ namespace Elegy.MapCompiler
 
 		private static void DebugFreeze( float seconds )
 		{
-			Console.WriteLine( "DEVELOPER: You have entered the 'debug freeze'." );
-			Console.WriteLine( "           The purpose of this is to freeze the app so you can" );
-			Console.WriteLine( $"           attach a debugger for about {(int)seconds}." );
+			Console.WriteLine( "DEVELOPER: You have entered the 'debug freeze'. The purpose of this is to freeze" );
+			Console.WriteLine( $"           the app so you can attach a debugger for about {(int)seconds} seconds." );
 			Console.WriteLine( "           Now go ahead. Attach the debugger while you still have the time." );
 
-			int secondCounter = (int)seconds;
-			int dotCounter = 4;
-			while ( secondCounter >= 0 )
+			int quarterSecondCounter = (int)seconds * 4;
+			while ( quarterSecondCounter >= 0 )
 			{
-				if ( dotCounter == 4 )
-				{
-					Console.WriteLine();
-					Console.Write( secondCounter );
-					secondCounter--;
-					dotCounter = 0;
-				}
-				else
-				{
-					Console.Write( '.' );
-				}
-				dotCounter++;
-
 				Thread.Sleep( 250 );
 
 				if ( System.Diagnostics.Debugger.IsAttached )
@@ -159,7 +144,8 @@ namespace Elegy.MapCompiler
 					return;
 				}
 			}
-			
+
+			Console.WriteLine( "Welp, no debugger was attached, moving on!" );
 			Console.WriteLine();
 		}
 
