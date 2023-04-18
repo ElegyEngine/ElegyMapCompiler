@@ -12,7 +12,7 @@ namespace Elegy.MapCompiler.Data.Processing
 		public string ClassName = string.Empty;
 		public Dictionary<string, string> Pairs = new();
 
-		public Entity( Map.Entity entity )
+		public Entity( BrushMapEntity entity )
 		{
 			Centre = entity.Centre;
 			BoundingBox = entity.BoundingBox;

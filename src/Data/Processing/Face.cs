@@ -10,7 +10,7 @@ namespace Elegy.MapCompiler.Data.Processing
 		public Material Material { get; set; }
 		public Plane Plane { get; set; }
 
-		public Face( Map.Face face )
+		public Face( BrushMapFace face )
 		{
 			Material = MaterialManager.FindOrLoadMaterial( $"textures/{face.MaterialName}" );
 			Centre = face.Polygon.Origin;

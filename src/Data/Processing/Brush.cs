@@ -9,7 +9,7 @@ namespace Elegy.MapCompiler.Data.Processing
 		public Aabb BoundingBox { get; set; } = new();
 		public List<Face> Faces { get; set; } = new();
 
-		public Brush( Map.Brush mapBrush )
+		public Brush( BrushMapBrush mapBrush )
 		{
 			Faces = CreateFacesFromMapBrush( mapBrush );
 			for ( int i = 0; i < Faces.Count; i++ )
@@ -21,14 +21,14 @@ namespace Elegy.MapCompiler.Data.Processing
 			RegenerateBounds();
 		}
 
-		public List<Face> CreateFacesFromMapBrush( Map.Brush mapBrush )
+		public List<Face> CreateFacesFromMapBrush( BrushMapBrush mapBrush )
 		{
 			List<Face> result = new();
 
 			for ( int i = 0; i < mapBrush.Faces.Count; i++ )
 			{
 				// To be 100% explicit we're building Processing.Face from Map.Face
-				Map.Face mapFace = mapBrush.Faces[i];
+				BrushMapFace mapFace = mapBrush.Faces[i];
 				result.Add( new( mapFace ) );
 			}
 

@@ -1,6 +1,7 @@
 ﻿// SPDX-FileCopyrightText: 2023 Admer Šuko
 // SPDX-License-Identifier: MIT
 
+using Elegy.Assets;
 using Elegy.MapCompiler.Assets;
 using Elegy.MapCompiler.Data;
 using Elegy.MapCompiler.Data.Processing;

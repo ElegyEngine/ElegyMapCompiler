@@ -1,13 +1,14 @@
 ﻿// SPDX-FileCopyrightText: 2023 Admer Šuko
 // SPDX-License-Identifier: MIT
 
+using Elegy.Assets;
 using Elegy.MapCompiler.Assets;
 using Elegy.MapCompiler.Data.Processing;
-using System.Text.Json;
 
-using CollisionMeshlet = Elegy.MapCompiler.Data.Output.CollisionMeshlet;
-using RenderSurface = Elegy.MapCompiler.Data.Output.RenderSurface;
-using RenderMesh = Elegy.MapCompiler.Data.Output.RenderMesh;
+using CollisionMeshlet = Elegy.Assets.ElegyMapData.CollisionMeshlet;
+using RenderSurface = Elegy.Assets.ElegyMapData.RenderSurface;
+using RenderMesh = Elegy.Assets.ElegyMapData.RenderMesh;
+using MaterialFlag = Elegy.MapCompiler.Data.MaterialFlag;
 
 namespace Elegy.MapCompiler.Processors
 {
