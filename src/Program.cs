@@ -2,20 +2,20 @@
 // SPDX-License-Identifier: MIT
 
 // Overview of Elegy.MapCompiler's responsibilities & function
-
+//
 // ===  Geo  === (WiP)
 // 1. Load the .map file and intersect planes to get the base mesh (done)
 // 2. Post-process (removing bad triangles, edge smoothing etc.)
 // 3. Subdivide the map into an octree, retain only leaves as AABBs (called "rooms")
 // 4. Generate the output meshes (visual, collision, occluders)
-
+//
 // ===  Vis  === (not done)
 // 1. Spawn tons of cameras in rooms, remove ones that are considered to be in the void
 // 2. Perform visibility computation via
 //		a) rasterisation on the GPU
 //		b) ray-tracing on the CPU
 // 3. Write output visibility data
-
+//
 // === Light === (not done)
 // 1. Generate UVs for lightmap
 // 2. Fill out one or more WorldPosition and WorldNormal maps
