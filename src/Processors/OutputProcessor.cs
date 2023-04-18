@@ -25,14 +25,6 @@ namespace Elegy.MapCompiler.Processors
 			Parameters = parameters;
 		}
 
-		private static readonly JsonSerializerOptions JsonOptions = new()
-		{
-			AllowTrailingCommas = true,
-			PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-			ReadCommentHandling = JsonCommentHandling.Skip,
-			WriteIndented = true
-		};
-
 		private int GetOrCreateRenderMesh( Entity entity )
 		{
 			Dictionary<string, RenderSurface> surfaceDict = new();
