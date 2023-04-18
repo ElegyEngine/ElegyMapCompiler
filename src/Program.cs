@@ -38,7 +38,7 @@ namespace Elegy.MapCompiler
 
 		public static void Main( string[] args )
 		{
-			Console.WriteLine( $"### Elegy.MapCompiler - built 2023/04/09 ###" );
+			Console.WriteLine( $"### Elegy.MapCompiler - built 2023/04/18 ###" );
 			Console.WriteLine( "I eat TrenchBroom and J.A.C.K. maps and produce compiled Elegy levels." );
 			Console.WriteLine( "Let's keep the fire... burning." );
 			Console.WriteLine();
@@ -80,8 +80,8 @@ namespace Elegy.MapCompiler
 
 			MaterialManager.Init();
 
-			BrushMapDocument? document = BrushMapDocument.FromValve220MapFile( FileSystem.GetPathTo( mParameters.MapFile ) );
-			if ( document is null )
+			string mapPath = FileSystem.GetPathTo( mParameters.MapFile );
+			if ( !FileSystem.FileExists( mapPath ) )
 			{
 				Console.WriteLine();
 				Console.WriteLine( "If I can't find the map, something's fundamentally wrong." );
@@ -90,8 +90,15 @@ namespace Elegy.MapCompiler
 				return;
 			}
 
-			if ( !document.Valid )
+			BrushMapDocument? document = null;
+			try
 			{
+				document = BrushMapDocument.FromValve220MapFile( FileSystem.GetPathTo( mParameters.MapFile ) );
+			}
+			catch ( Exception ex )
+			{
+				Console.WriteLine( "Error while parsing the map!" );
+				Console.WriteLine( $"Message: {ex.Message}" );
 				Console.WriteLine();
 				Console.WriteLine( "An error while parsing the map means something went fundamentally wrong." );
 				Console.WriteLine( "Open Notepad or something and check out that line & column, maybe try fixing it." );
@@ -100,6 +107,12 @@ namespace Elegy.MapCompiler
 				Console.WriteLine( "and this still happens, then open an issue on my GitHub repository:" );
 				Console.WriteLine( "    https://github.com/ElegyEngine/Elegy.MapCompiler/issues" );
 				Console.WriteLine( "Thank you for your patience. :3" );
+				return;
+			}
+
+			if ( document is null )
+			{
+				Console.WriteLine( "Unknown error occurred" );
 				return;
 			}
 
@@ -123,6 +136,8 @@ namespace Elegy.MapCompiler
 			OutputProcessor op = new( data, mParameters );
 			op.GenerateOutputData();
 			op.WriteToFile( FileSystem.GetPathTo( $"{mParameters.OutputPath}.elf" ) );
+
+			Console.WriteLine( "Compilation's done. You can try out your map now!" );
 		}
 
 		private static void DebugFreeze( float seconds )
@@ -175,7 +190,7 @@ namespace Elegy.MapCompiler
 			Console.WriteLine();
 			Console.WriteLine( "Now, here's a list of all parameters:" );
 			Console.WriteLine();
-			Console.WriteLine( "| NAME         | DESCRIPTION                             |" );
+			Console.WriteLine( "| NAME          | DESCRIPTION                                                          |" );
 			Console.WriteLine();
 			Console.WriteLine( " -map:           Path to the map, preferably absolute, can be relative to the game directory." );
 			Console.WriteLine();
