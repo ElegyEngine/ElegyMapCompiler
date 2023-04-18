@@ -9,5 +9,7 @@ namespace Elegy.MapCompiler.Data.Processing
 		public int Width { get; set; } = 0;
 		public int Height { get; set; } = 0;
 		public MaterialFlag Flags { get; set; } = MaterialFlag.None;
+
+		public bool HasFlag( MaterialFlag flag ) => Flags.HasFlag( flag );
 	}
 }

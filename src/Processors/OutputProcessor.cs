@@ -41,7 +41,7 @@ namespace Elegy.MapCompiler.Processors
 			{
 				foreach ( var face in brush.Faces )
 				{
-					if ( face.Material.Flags.HasFlag( MapCompiler.Data.MaterialFlag.NoDraw ) )
+					if ( face.Material.HasFlag( MaterialFlag.NoDraw ) )
 					{
 						continue;
 					}
