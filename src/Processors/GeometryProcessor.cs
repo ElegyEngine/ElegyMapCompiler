@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 using Elegy.Assets;
+using Elegy.Extensions;
 using Elegy.MapCompiler.Assets;
 using Elegy.MapCompiler.Data;
 using Elegy.MapCompiler.Data.Processing;
@@ -117,6 +118,7 @@ namespace Elegy.MapCompiler.Processors
 					brush.Move( -originDelta );
 				}
 				entity.Centre = brushOrigin;
+				entity.Pairs.SetVector3( "origin", entity.Centre );
 
 				// Finally regenerate the bounding boxes,
 				// as they're out of date now
