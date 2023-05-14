@@ -107,7 +107,7 @@ namespace Elegy.MapCompiler.Processors
 			foreach ( var brush in entity.Brushes )
 			{
 				// Skip non-solid brushes
-				if ( brush.HasMaterialFlag( MapCompiler.Data.MaterialFlag.NoCollision ) )
+				if ( brush.HasMaterialFlag( MaterialFlag.NoCollision ) )
 				{
 					continue;
 				}
