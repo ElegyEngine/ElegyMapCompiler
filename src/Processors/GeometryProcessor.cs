@@ -22,6 +22,8 @@ namespace Elegy.MapCompiler.Processors
 
 		public void GenerateGeometryFromMap( BrushMapDocument map )
 		{
+			map.MergeInto( "worldspawn", "func_group" );
+
 			Data.Entities.Capacity = map.MapEntities.Count;
 			foreach ( var entity in map.MapEntities )
 			{
