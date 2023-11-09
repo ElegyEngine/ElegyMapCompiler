@@ -6,14 +6,12 @@
 // ===  Geo  === (WiP)
 // 1. Load the .map file and intersect planes to get the base mesh (done)
 // 2. Post-process (removing bad triangles, edge smoothing etc.)
-// 3. Subdivide the map into an octree, retain only leaves as AABBs (called "rooms")
+// 3. Subdivide the map into a double grid
 // 4. Generate the output meshes (visual, collision, occluders)
 //
 // ===  Vis  === (not done)
 // 1. Spawn tons of cameras in rooms, remove ones that are considered to be in the void
-// 2. Perform visibility computation via
-//		a) rasterisation on the GPU
-//		b) ray-tracing on the CPU
+// 2. Perform visibility computation via rasterisation on the GPU
 // 3. Write output visibility data
 //
 // === Light === (not done)
@@ -38,7 +36,7 @@ namespace Elegy.MapCompiler
 
 		public static void Main( string[] args )
 		{
-			Console.WriteLine( $"### Elegy.MapCompiler - built 2023/04/18 ###" );
+			Console.WriteLine( $"### Elegy.MapCompiler - built 2023/11/08 ###" );
 			Console.WriteLine( "I eat TrenchBroom and J.A.C.K. maps and produce compiled Elegy levels." );
 			Console.WriteLine( "Let's keep the fire... burning." );
 			Console.WriteLine();
@@ -120,7 +118,6 @@ namespace Elegy.MapCompiler
 			GeometryProcessor processor = new( data, mParameters );
 			processor.GenerateGeometryFromMap( document );
 			processor.FixBrushOrigins();
-			processor.RemoveFacesWithFlags( Data.MaterialFlag.Culled );
 			processor.UpdateBoundaries();
 			//processor.SmoothenNormals();
 
