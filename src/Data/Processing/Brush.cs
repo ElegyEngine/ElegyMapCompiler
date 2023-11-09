@@ -1,6 +1,8 @@
 ﻿// SPDX-FileCopyrightText: 2023 Admer Šuko
 // SPDX-License-Identifier: MIT
 
+using Elegy.Assets;
+
 namespace Elegy.MapCompiler.Data.Processing
 {
 	public class Brush
@@ -35,7 +37,7 @@ namespace Elegy.MapCompiler.Data.Processing
 			return result;
 		}
 
-		public bool HasMaterialFlag( MaterialFlag flags )
+		public bool HasMaterialFlag( ToolMaterialFlag flags )
 		{
 			for ( int i = 0; i < Faces.Count; i++ )
 			{

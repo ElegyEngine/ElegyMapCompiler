@@ -34,7 +34,7 @@ namespace Elegy.MapCompiler.Processors
 			}
 		}
 
-		public void RemoveFacesWithFlags( MaterialFlag flags )
+		public void RemoveFacesWithFlags( ToolMaterialFlag flags )
 		{
 			foreach ( var entity in Data.Entities )
 			{
@@ -42,7 +42,7 @@ namespace Elegy.MapCompiler.Processors
 				{
 					foreach ( var face in brush.Faces )
 					{
-						if ( face.Material.Flags.HasFlag( flags ) )
+						if ( face.Material.HasFlag( flags ) )
 						{
 							brush.Faces.Remove( face );
 						}
@@ -91,7 +91,7 @@ namespace Elegy.MapCompiler.Processors
 				float brushOriginCount = 0.0f;
 				foreach ( var brush in entity.Brushes )
 				{
-					if ( brush.HasMaterialFlag( MaterialFlag.Origin ) )
+					if ( brush.HasMaterialFlag( ToolMaterialFlag.Origin ) )
 					{
 						brushOrigin += brush.BoundingBox.GetCenter();
 						brushOriginCount += 1.0f;

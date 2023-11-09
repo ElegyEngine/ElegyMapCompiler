@@ -3,7 +3,7 @@
 
 namespace Elegy.MapCompiler.Data.Processing
 {
-    public class Face
+	public class Face
 	{
 		public Vector3 Centre { get; set; } = Vector3.Zero;
 		public List<Vertex> Vertices { get; set; } = new();

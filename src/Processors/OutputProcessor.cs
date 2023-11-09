@@ -8,7 +8,6 @@ using Elegy.MapCompiler.Data.Processing;
 using CollisionMeshlet = Elegy.Assets.ElegyMapData.CollisionMeshlet;
 using RenderSurface = Elegy.Assets.ElegyMapData.RenderSurface;
 using RenderMesh = Elegy.Assets.ElegyMapData.RenderMesh;
-using MaterialFlag = Elegy.MapCompiler.Data.MaterialFlag;
 
 namespace Elegy.MapCompiler.Processors
 {
@@ -33,7 +32,7 @@ namespace Elegy.MapCompiler.Processors
 			{
 				foreach ( var face in brush.Faces )
 				{
-					if ( face.Material.HasFlag( MaterialFlag.NoDraw ) )
+					if ( face.Material.HasFlag( ToolMaterialFlag.NoDraw ) )
 					{
 						continue;
 					}
@@ -107,7 +106,7 @@ namespace Elegy.MapCompiler.Processors
 			foreach ( var brush in entity.Brushes )
 			{
 				// Skip non-solid brushes
-				if ( brush.HasMaterialFlag( MaterialFlag.NoCollision ) )
+				if ( brush.HasMaterialFlag( ToolMaterialFlag.NoCollision ) )
 				{
 					continue;
 				}

@@ -1,6 +1,8 @@
 ﻿// SPDX-FileCopyrightText: 2023 Admer Šuko
 // SPDX-License-Identifier: MIT
 
+using Elegy.Assets;
+
 namespace Elegy.MapCompiler.Data.Processing
 {
 	public class Material
@@ -8,8 +10,8 @@ namespace Elegy.MapCompiler.Data.Processing
 		public string Name { get; set; } = string.Empty;
 		public int Width { get; set; } = 0;
 		public int Height { get; set; } = 0;
-		public MaterialFlag Flags { get; set; } = MaterialFlag.None;
+		public ToolMaterialFlag Flags { get; set; } = ToolMaterialFlag.None;
 
-		public bool HasFlag( MaterialFlag flag ) => Flags.HasFlag( flag );
+		public bool HasFlag( ToolMaterialFlag flag ) => Flags.HasFlag( flag );
 	}
 }
