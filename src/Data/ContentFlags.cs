@@ -5,6 +5,9 @@
 
 namespace Elegy.MapCompiler.Data
 {
+	/// <summary>
+	/// Brush content flags.
+	/// </summary>
 	[Flags]
 	public enum ContentFlag
 	{
