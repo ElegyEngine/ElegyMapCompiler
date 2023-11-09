@@ -12,7 +12,7 @@ namespace Elegy.MapCompiler.Data.Processing
 
 		public Face( BrushMapFace face )
 		{
-			Material = MaterialManager.FindOrLoadMaterial( $"textures/{face.MaterialName}" );
+			Material = MaterialSystem.LoadMaterial( $"materials/{face.MaterialName}" );
 			Centre = face.Polygon.Origin;
 
 			for ( int i = 0; i < face.Polygon.Points.Count; i++ )

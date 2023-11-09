@@ -1,15 +1,34 @@
 ﻿// SPDX-FileCopyrightText: 2023 Admer Šuko
 // SPDX-License-Identifier: MIT
 
-// TODO: Replace with Elegy's MaterialSystem when it has one
+// TODO: Replace with Elegy's material system when it has one
 
+using Elegy.Assets;
+using Godot;
 using System.Buffers.Binary;
 
 namespace Elegy.MapCompiler.Data.Processing
 {
-	public static class MaterialManager
+	/// <summary>
+	/// Material system implementation.
+	/// </summary>
+	internal static class MaterialSystem
 	{
-		private static Dictionary<string, Material> mMaterials = new();
+		class MaterialDefinitionPair
+		{
+			public MaterialDefinitionPair( MaterialDefinition def, Material? material )
+			{
+				Def = def;
+				Material = material;
+			}
+
+			public MaterialDefinition Def { get; set; }
+			public Material? Material { get; set; } = null;
+		}
+
+		private const string Tag = "MaterialManager";
+
+		private static Dictionary<string, MaterialDefinitionPair> mMaterialDefs = new();
 		private static Material mDefaultMaterial = new()
 		{
 			Name = "Default",
@@ -17,99 +36,94 @@ namespace Elegy.MapCompiler.Data.Processing
 			Height = 128
 		};
 
-		public static Material DefaultMaterial => mDefaultMaterial;
-
-		public static void Init()
+		public static bool Init()
 		{
-			mMaterials.Add( "Default", mDefaultMaterial );
-		}
+			Console.WriteLine( $"[{Tag}] Init" );
 
-		public static Material FindOrLoadMaterial( string materialName )
-		{
-			if ( mMaterials.ContainsKey( materialName ) )
+			var loadMaterialsForDirectory = ( string name, string directory ) =>
 			{
-				return mMaterials[materialName];
-			}
-
-			Material? material = LoadMaterial( materialName );
-			if ( material == null )
-			{
-				return mDefaultMaterial;
-			}
-
-			mMaterials.Add( materialName, material );
-			return material;
-		}
-
-		private static Material? LoadMaterial( string materialName )
-		{
-			if ( FileSystem.FileExists( $"{materialName}.png" ) )
-			{
-				return LoadMaterialFromPng( materialName );
-			}
-			else if ( FileSystem.FileExists( $"{materialName}.jpeg" ) || FileSystem.FileExists( $"{materialName}.jpg" ) )
-			{
-				Console.WriteLine( $"[MaterialManager] JPEG not supported yet ('{materialName}.jp[e]g')" );
-			}
-			else if ( FileSystem.FileExists( $"{materialName}.bmp" ) )
-			{
-				Console.WriteLine( $"[MaterialManager] BMP not supported yet ('{materialName}.bmp')" );
-			}
-			else if ( FileSystem.FileExists( $"{materialName}.dds" ) )
-			{
-				Console.WriteLine( $"[MaterialManager] DDS not supported yet ('{materialName}.dds')" );
-			}
-			else if ( FileSystem.FileExists( $"{materialName}.qoi" ) )
-			{
-				Console.WriteLine( $"[MaterialManager] QOI not supported yet ('{materialName}.qoi')" );
-			}
-
-			return null;
-		}
-
-		private static readonly byte[] PngSignature = 
-		{// \211  P     N     G     \r    \n    \032  \n
-			0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a
-		};
-
-		private static Material? LoadMaterialFromPng( string path )
-		{
-			byte[] bytes = FileSystem.ReadAllBytes( $"{path}.png" );
-			for ( int i = 0; i < PngSignature.Length; i++ )
-			{
-				if ( bytes[i] != PngSignature[i] )
+				string path = $"{directory}/materials";
+				if ( !Path.Exists( path ) )
 				{
-					return null;
+					Console.WriteLine( $"WARNING: [{Tag}] {name} directory doesn't exist or doesn't have any materials!" );
+					return false;
 				}
-			}
 
-			ByteBuffer buffer = new( bytes );
-			buffer.Advance( PngSignature.Length );
+				var materialDocumentPaths = Directory.GetFileSystemEntries( path, "*.shader", SearchOption.AllDirectories );
+				if ( materialDocumentPaths.Length == 0 )
+				{
+					Console.WriteLine( $"WARNING: [{Tag}] {name}'s materials directory is empty!" );
+					return false;
+				}
 
-			// Let's assume we're at the IHDR chunk now
+				foreach ( var materialDocumentPath in materialDocumentPaths )
+				{
+					MaterialDocument document = new( File.ReadAllText( materialDocumentPath ) );
+					if ( document.Materials.Count == 0 )
+					{
+						Console.WriteLine( $"WARNING: [{Tag}] Parsed 0 materials in '{materialDocumentPath}'" );
+						continue;
+					}
 
-			// Chunk length
-			buffer.ReadI32();
-			// Chunk type
-			buffer.ReadI32();
+					foreach ( var materialDef in document.Materials )
+					{
+						// This way materials will be overridden
+						mMaterialDefs[materialDef.Name] = new( materialDef, null );
+					}
 
-			int width = BinaryPrimitives.ReverseEndianness( buffer.ReadI32() );
-			int height = BinaryPrimitives.ReverseEndianness( buffer.ReadI32() );
+					Console.WriteLine( $"[{Tag}] Parsed {document.Materials.Count} materials in '{materialDocumentPath}'" );
+				}
 
-			if ( width <= 0 || height <= 0 )
-			{
-				Console.WriteLine( $"[MaterialManager] Invalid dimensions '{width}x{height}' ('{path}')" );
-				return null;
-			}
-
-			Console.WriteLine( $"[MaterialManager] Loaded {width}x{height} ('{path}.png')" );
-
-			return new()
-			{
-				Name = path,
-				Width = width,
-				Height = height
+				return true;
 			};
+
+			Console.WriteLine( $"[{Tag}] Loading engine materials..." );
+			if ( !loadMaterialsForDirectory( "Engine", "engine" ) )
+			{
+				return false;
+			}
+
+			loadMaterialsForDirectory( $"This game", FileSystem.GameDirectory );
+
+			return true;
+		}
+
+		public static void Shutdown()
+		{
+			mMaterialDefs.Clear();
+		}
+
+		public static Material LoadMaterial( string materialName )
+		{
+			if ( mMaterialDefs.ContainsKey( materialName ) )
+			{
+				var pair = mMaterialDefs[materialName];
+				if ( pair.Material is null )
+				{
+					pair.Material = CreateMaterialFromDef( pair.Def );
+				}
+
+				return pair.Material;
+			}
+
+			Console.WriteLine( $"WARNING: [{Tag}] Material '{materialName}' doesn't exist" );
+
+			return mDefaultMaterial;
+		}
+
+		private static Material CreateMaterialFromDef( MaterialDefinition materialDef )
+		{
+			Material material = ImageLoader.LoadMaterialFromPng( materialDef.DiffuseMap ?? "none" ) ?? new()
+			{
+				Width = 128,
+				Height = 128,
+			};
+
+			// You can populate other tool material parameters here
+			material.Name = materialDef.Name;
+			material.Flags = materialDef.ToolFlags;
+
+			return material;
 		}
 	}
 }

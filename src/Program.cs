@@ -76,7 +76,7 @@ namespace Elegy.MapCompiler
 				return;
 			}
 
-			MaterialManager.Init();
+			MaterialSystem.Init();
 
 			string mapPath = FileSystem.GetPathTo( mParameters.MapFile );
 			if ( !FileSystem.FileExists( mapPath ) )
