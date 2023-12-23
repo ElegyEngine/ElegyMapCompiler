@@ -1,6 +1,10 @@
 
 # Elegy.MapCompiler
 
+### *Note: moved to a unified repository at [Elegy.Engine](https://github.com/ElegyEngine/ElegyEngine)*
+
+----------
+
 Level compiler for [Elegy Engine](https://github.com/ElegyEngine).
 
 What it currently does and doesn't:
